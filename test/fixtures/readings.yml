@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+one:
+  temperature: 1
+  humidity: 1
+  light: 1
+
+two:
+  temperature: 1
+  humidity: 1
+  light: 1

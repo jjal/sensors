@@ -1,0 +1,20 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Temperature:</b>
+  <%= @reading.temperature %>
+</p>
+
+<p>
+  <b>Humidity:</b>
+  <%= @reading.humidity %>
+</p>
+
+<p>
+  <b>Light:</b>
+  <%= @reading.light %>
+</p>
+
+
+<%= link_to 'Edit', edit_reading_path(@reading) %> |
+<%= link_to 'Back', readings_path %>
