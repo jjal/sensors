@@ -230,15 +230,15 @@
 		
 		$.getJSON("http://sensors.kinyei.org/readings.json?jsoncallback=?",
 			function(results) {
+				for(i=0;i<(length - results.length);i++) //pad for beginning
+				{
+					d1.push(null);
+					d2.push(null);
+					d3.push(null);
+					labels.push(null);
+					toolTips.push(null);
+				}
 				$.each(results, function(i,item) {
-					for(i=0;i<(length - results.length);i++) //pad for beginning
-					{
-						d1.push(null);
-						d2.push(null);
-						d3.push(null);
-						labels.push(null);
-						toolTips.push(null);
-					}
 					d1.push(item.temperature);
 					d2.push(item.humidity);
 					d3.push(item.light/10);
