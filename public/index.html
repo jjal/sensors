@@ -227,7 +227,7 @@
 					d1.push(item.temperature);
 					d2.push(item.humidity);
 					d3.push(item.light/10);
-					labels.push(i%100==0?item.created_at:"");
+					labels.push(i%30==0?item.created_at:"");
 					var tt = item.created_at+": "+item.temperature+"° "+item.humidity+"% "+item.light+"l"
 					toolTips.push(tt);
 					//if (d1.length > length) {
