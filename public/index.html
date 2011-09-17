@@ -186,7 +186,7 @@
     d1 = [];
     d2 = [];
 	d3 = [];
-	length = 100;
+	length = 504;
     
     // Pre-pad the arrays with 100 null values
     for (var i=0; i< length; ++i) {
@@ -204,8 +204,8 @@
         graph.Set('chart.title.xaxis', 'Time');
         graph.Set('chart.filled', false);
         //graph.Set('chart.fillstyle', ['#daf1fa', '#faa']);
-        graph.Set('chart.colors', ['red', 'blue', 'yellow']);
-        graph.Set('chart.linewidth', 3);
+        graph.Set('chart.colors', ['red', 'blue', 'orange']);
+        graph.Set('chart.linewidth', 2);
         graph.Set('chart.ymax', 100);
         graph.Set('chart.xticks', d1.length);
 
@@ -214,33 +214,36 @@
     
     function updateGraph (e)
     {
-        // Clear the canvas and redraw the chart
-        RGraph.Clear(document.getElementById("cvs"));
-        var graph = getGraph('cvs', d1, d2, d3);
-        graph.Draw();
 		
 		$.getJSON("http://sensors.kinyei.org/readings.json?jsoncallback=?",
 			function(results) {
-				alert(results);
 				$.each(results, function(i,item) {
 					d1.push(item.temperature);
 					d2.push(item.humidity);
 					d3.push(item.light/10);
+					
 				});
+				// Clear the canvas and redraw the chart
+				RGraph.Clear(document.getElementById("cvs"));
+				var graph = getGraph('cvs', d1, d2, d3);
+				graph.Draw();
 			}
 		);
         
-        // Add some data to the data arrays
+		// Add some data to the data arrays
         //d1.push(RGraph.random(5, 10));
         //d2.push(RGraph.random(5, 10));
 		//d3.push(RGraph.random(5, 10));
         
         // Get rid of the first values of the arrays
-        //if (d1.length > length) {
-        //    d1 = RGraph.array_shift(d1);
-        //    d2 = RGraph.array_shift(d2);
-		// 	d3 = RGraph.array_shift(d3);
-        //}
+        if (d1.length > length) {
+			for(var i=0;i<length;i++)
+			{
+				d1 = RGraph.array_shift(d1);
+				d2 = RGraph.array_shift(d2);
+				d3 = RGraph.array_shift(d3);
+			}
+        }
 
         setTimeout(updateGraph,60000);
     }
