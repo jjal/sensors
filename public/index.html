@@ -175,6 +175,7 @@
 	 <!-- RGraph dependencies --> 
 	<script src="/assets/RGraph.common.core.js" ></script> 
     <script src="/assets/RGraph.common.context.js" ></script> 
+	<script src="/assets/RGraph.common.tooltips.js" ></script> 
     <script src="/assets/RGraph.line.js" ></script> 
     <!--[if IE 8]><script src="excanvas.original.js"></script><![endif]--> 
  
@@ -186,23 +187,33 @@
     d1 = [];
     d2 = [];
 	d3 = [];
-	length = 504;
+	labels = [];
+	toolTips = [];
+	length = 1000;
     
     // Pre-pad the arrays with 100 null values
-    for (var i=0; i< length; ++i) {
-        d1.push(null);
-        d2.push(null);
-		d3.push(null);
-    }
+    //for (var i=0; i< length; ++i) {
+    //    d1.push(null);
+    //    d2.push(null);
+	//	d3.push(null);
+    //}
 
     function getGraph(id, d1, d2, d3)
     {
         var graph = new RGraph.Line(id, d1, d2, d3);
-        graph.Set('chart.background.barcolor1', 'white');
+		graph.Set('chart.tooltips',toolTips);
+		graph.Set('chart.labels',labels);
+		graph.Set('chart.text.angle', 90);
+        graph.Set('chart.key',["temperature","humidity","light"]);
+		graph.Set('chart.key.shadow',true);
+		graph.Set('chart.key.rounded',true);
+		graph.Set('chart.background.barcolor1', 'white');
         graph.Set('chart.background.barcolor2', 'white');
 		graph.Set('chart.background.barcolor3', 'white');
         graph.Set('chart.title.xaxis', 'Time');
         graph.Set('chart.filled', false);
+		graph.Set('chart.gutter.bottom',80);
+		
         //graph.Set('chart.fillstyle', ['#daf1fa', '#faa']);
         graph.Set('chart.colors', ['red', 'blue', 'orange']);
         graph.Set('chart.linewidth', 2);
@@ -221,7 +232,16 @@
 					d1.push(item.temperature);
 					d2.push(item.humidity);
 					d3.push(item.light/10);
-					
+					labels.push(i%100==0?item.created_at:"");
+					var tt = item.created_at+": "+item.temperature+"° "+item.humidity+"% "+item.light+"l"
+					toolTips.push(tt);
+					if (d1.length > length) {
+						d1 = RGraph.array_shift(d1);
+						d2 = RGraph.array_shift(d2);
+						d3 = RGraph.array_shift(d3);
+						labels = RGraph.array_shift(labels);
+						toolTips = RGraph.array_shift(toolTips);
+					}
 				});
 				// Clear the canvas and redraw the chart
 				RGraph.Clear(document.getElementById("cvs"));
@@ -236,14 +256,7 @@
 		//d3.push(RGraph.random(5, 10));
         
         // Get rid of the first values of the arrays
-        if (d1.length > length) {
-			for(var i=0;i<length;i++)
-			{
-				d1 = RGraph.array_shift(d1);
-				d2 = RGraph.array_shift(d2);
-				d3 = RGraph.array_shift(d3);
-			}
-        }
+       
 
         setTimeout(updateGraph,60000);
     }
