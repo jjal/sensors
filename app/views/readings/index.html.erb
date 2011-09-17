@@ -17,8 +17,8 @@
     <td><%= reading.temperature %></td>
     <td><%= reading.humidity %></td>
     <td><%= reading.light %></td>
-    <td><%= link_to 'Show', reading %></td>
     <td><%= link_to 'Edit', edit_reading_path(reading) %></td>
+    <td><%= link_to 'Show', reading %></td>
     <td><%= link_to 'Destroy', reading, confirm: 'Are you sure?', method: :delete %></td>
   </tr>
 <% end %>

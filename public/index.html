@@ -192,11 +192,13 @@
 	length = 1000;
     
     // Pre-pad the arrays with 100 null values
-    //for (var i=0; i< length; ++i) {
-    //    d1.push(null);
-    //    d2.push(null);
-	//	d3.push(null);
-    //}
+    for (var i=0; i< length; ++i) {
+        d1.push(null);
+        d2.push(null);
+		d3.push(null);
+		labels.push(null);
+		toolTips.push(null);
+    }
 
     function getGraph(id, d1, d2, d3)
     {
