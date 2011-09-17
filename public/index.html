@@ -222,14 +222,7 @@
 		
 		$.getJSON("http://sensors.kinyei.org/readings.json?jsoncallback=?",
 			function(results) {
-				for(i=0;i<(length - results.length);i++) //pad for beginning
-				{
-					d1.push(null);
-					d2.push(null);
-					d3.push(null);
-					labels.push(null);
-					toolTips.push(null);
-				}
+				d1.length=d2.length=d3.length=labels.length=toolTips.length=0;
 				$.each(results, function(i,item) {
 					d1.push(item.temperature);
 					d2.push(item.humidity);
@@ -237,13 +230,13 @@
 					labels.push(i%100==0?item.created_at:"");
 					var tt = item.created_at+": "+item.temperature+"° "+item.humidity+"% "+item.light+"l"
 					toolTips.push(tt);
-					if (d1.length > length) {
-						d1 = RGraph.array_shift(d1);
-						d2 = RGraph.array_shift(d2);
-						d3 = RGraph.array_shift(d3);
-						labels = RGraph.array_shift(labels);
-						toolTips = RGraph.array_shift(toolTips);
-					}
+					//if (d1.length > length) {
+					//	d1 = RGraph.array_shift(d1);
+					//	d2 = RGraph.array_shift(d2);
+					//	d3 = RGraph.array_shift(d3);
+					//	labels = RGraph.array_shift(labels);
+					//	toolTips = RGraph.array_shift(toolTips);
+					//}
 				});
 				// Clear the canvas and redraw the chart
 				RGraph.Clear(document.getElementById("cvs"));
