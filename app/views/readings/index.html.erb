@@ -12,6 +12,7 @@
 
 <% @readings.each do |reading| %>
   <tr>
+    <td><%= reading.created_at %></td>
     <td><%= reading.temperature %></td>
     <td><%= reading.humidity %></td>
     <td><%= reading.light %></td>
