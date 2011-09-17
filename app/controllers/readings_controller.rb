@@ -6,7 +6,7 @@ class ReadingsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render json: @readings, callback: params[:callback] }
+      format.json { render json: @readings, callback: params[:jsoncallback] }
     end
   end
 

@@ -221,7 +221,8 @@
 		
 		$.getJSON("http://sensors.kinyei.org/readings.json?jsoncallback=?",
 			function(results) {
-				$.each(results.items, function(i,item) {
+				alert(results);
+				$.each(results, function(i,item) {
 					d1.push(item.temperature);
 					d2.push(item.humidity);
 					d3.push(item.light/10);
