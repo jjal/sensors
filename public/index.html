@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Ruby on Rails: Welcome aboard</title>
+    <title>Sensors</title>
     <style type="text/css" media="screen">
       body {
         margin: 0;
@@ -171,71 +171,80 @@
         font-style: italic;
       }
     </style>
-    <script type="text/javascript">
-      function about() {
-        info = document.getElementById('about-content');
-        if (window.XMLHttpRequest)
-          { xhr = new XMLHttpRequest(); }
-        else
-          { xhr = new ActiveXObject("Microsoft.XMLHTTP"); }
-        xhr.open("GET","rails/info/properties",false);
-        xhr.send("");
-        info.innerHTML = xhr.responseText;
-        info.style.display = 'block'
-      }
-    </script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+	 <!-- RGraph dependencies --> 
+	<script src="/assets/RGraph.common.core.js" ></script> 
+    <script src="/assets/RGraph.common.context.js" ></script> 
+    <script src="/assets/RGraph.line.js" ></script> 
+    <!--[if IE 8]><script src="excanvas.original.js"></script><![endif]--> 
+ 
+    
   </head>
   <body>
-    <div id="page">
-      <div id="sidebar">
-        <ul id="sidebar-items">
-          <li>
-            <h3>Browse the documentation</h3>
-            <ul class="links">
-              <li><a href="http://guides.rubyonrails.org/">Rails Guides</a></li>
-              <li><a href="http://api.rubyonrails.org/">Rails API</a></li>
-              <li><a href="http://www.ruby-doc.org/core/">Ruby core</a></li>
-              <li><a href="http://www.ruby-doc.org/stdlib/">Ruby standard library</a></li>
-            </ul>
-          </li>
-        </ul>
-      </div>
+    <canvas id="cvs" width="600" height="250">[No canvas support]</canvas>
+	<script type="text/javascript">
+    d1 = [];
+    d2 = [];
+	d3 = [];
+	length = 100;
+    
+    // Pre-pad the arrays with 100 null values
+    for (var i=0; i< length; ++i) {
+        d1.push(null);
+        d2.push(null);
+		d3.push(null);
+    }
 
-      <div id="content">
-        <div id="header">
-          <h1>Welcome aboard</h1>
-          <h2>You&rsquo;re riding Ruby on Rails!</h2>
-        </div>
+    function getGraph(id, d1, d2, d3)
+    {
+        var graph = new RGraph.Line(id, d1, d2, d3);
+        graph.Set('chart.background.barcolor1', 'white');
+        graph.Set('chart.background.barcolor2', 'white');
+		graph.Set('chart.background.barcolor3', 'white');
+        graph.Set('chart.title.xaxis', 'Time');
+        graph.Set('chart.filled', false);
+        //graph.Set('chart.fillstyle', ['#daf1fa', '#faa']);
+        graph.Set('chart.colors', ['red', 'blue', 'yellow']);
+        graph.Set('chart.linewidth', 3);
+        graph.Set('chart.ymax', 100);
+        graph.Set('chart.xticks', d1.length);
 
-        <div id="about">
-          <h3><a href="rails/info/properties" onclick="about(); return false">About your application&rsquo;s environment</a></h3>
-          <div id="about-content" style="display: none"></div>
-        </div>
+        return graph;
+    }
+    
+    function updateGraph (e)
+    {
+        // Clear the canvas and redraw the chart
+        RGraph.Clear(document.getElementById("cvs"));
+        var graph = getGraph('cvs', d1, d2, d3);
+        graph.Draw();
+		
+		$.getJSON("http://sensors.kinyei.org/readings.json?jsoncallback=?",
+			function(results) {
+				$.each(results.items, function(i,item) {
+					d1.push(item.temperature);
+					d2.push(item.humidity);
+					d3.push(item.light/10);
+				});
+			}
+		);
+        
+        // Add some data to the data arrays
+        //d1.push(RGraph.random(5, 10));
+        //d2.push(RGraph.random(5, 10));
+		//d3.push(RGraph.random(5, 10));
+        
+        // Get rid of the first values of the arrays
+        //if (d1.length > length) {
+        //    d1 = RGraph.array_shift(d1);
+        //    d2 = RGraph.array_shift(d2);
+		// 	d3 = RGraph.array_shift(d3);
+        //}
 
-        <div id="getting-started">
-          <h1>Getting started</h1>
-          <h2>Here&rsquo;s how to get rolling:</h2>
-
-          <ol>
-            <li>
-              <h2>Use <code>rails generate</code> to create your models and controllers</h2>
-              <p>To see all available options, run it without parameters.</p>
-            </li>
-
-            <li>
-              <h2>Set up a default route and remove <span class="filename">public/index.html</span></h2>
-              <p>Routes are set up in <span class="filename">config/routes.rb</span>.</p>
-            </li>
-
-            <li>
-              <h2>Create your database</h2>
-              <p>Run <code>rake db:create</code> to create your database. If you're not using SQLite (the default), edit <span class="filename">config/database.yml</span> with your username and password.</p>
-            </li>
-          </ol>
-        </div>
-      </div>
-
-      <div id="footer">&nbsp;</div>
-    </div>
+        setTimeout(updateGraph,60000);
+    }
+    
+    updateGraph();
+</script>
   </body>
 </html>
