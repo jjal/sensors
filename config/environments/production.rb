@@ -21,6 +21,7 @@ Sensors::Application.configure do
   config.assets.digest = true
   
   config.active_record.default_timezone = :local
+  config.time_zone = "Asia/Phnom_Penh"
 
   # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
