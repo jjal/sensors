@@ -19,6 +19,8 @@ Sensors::Application.configure do
 
   # Generate digests for assets URLs
   config.assets.digest = true
+  
+  config.active_record.default_timezone = :local
 
   # Defaults to Rails.root.join("public/assets")
   # config.assets.manifest = YOUR_PATH
